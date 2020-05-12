@@ -19,6 +19,7 @@ executable gemini-textboard
   other-extensions:    OverloadedStrings
   build-depends:       base
                      , gemini-server
+                     , gemini-router
                      , language-gemini
                      , nonce
                      , cache
