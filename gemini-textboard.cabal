@@ -1,0 +1,34 @@
+cabal-version:       2.2
+
+name:                gemini-textboard
+version:             0.1.0.0
+-- synopsis:
+-- description:
+-- bug-reports:
+license:             BSD-3-Clause
+license-file:        LICENSE
+author:              Francesco Gazzetta
+maintainer:          fgaz@fgaz.me
+-- copyright:
+category:            Gemini
+extra-source-files:  CHANGELOG.md
+
+executable gemini-textboard
+  main-is:             Main.hs
+  -- other-modules:
+  other-extensions:    OverloadedStrings
+  build-depends:       base
+                     , gemini-server
+                     , language-gemini
+                     , nonce
+                     , cache
+                     , sqlite-simple
+                     , clock
+                     , text
+                     , time
+                     , network-uri
+                     , transformers
+  hs-source-dirs:      app
+  ghc-options:         -Wall
+  default-language:    Haskell2010
+
