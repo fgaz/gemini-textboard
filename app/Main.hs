@@ -58,10 +58,21 @@ createTables conn =
     "parent INTEGER, content TEXT NOT NULL, time TEXT NOT NULL, " <>
     "FOREIGN KEY(parent) REFERENCES posts(id))"
 
-getAllThreads :: App [(Int, Text, UTCTime)]
+getAllThreads :: App [(Int, Text, UTCTime, Maybe (Int, Text, UTCTime))]
 getAllThreads = do
   conn <- db <$> lift ask
-  liftIO $ SQL.query_ conn "SELECT id, content, time FROM posts WHERE parent IS NULL"
+  results <- liftIO $ SQL.query_ conn
+    "SELECT p.id, p.content, p.time, r.id, r.content, r.time \
+    \  FROM\
+    \    posts AS p\
+    \    OUTER LEFT JOIN (SELECT *, max(time) FROM posts GROUP BY parent) AS r\
+    \  ON p.id = r.parent\
+    \  WHERE p.parent IS NULL\
+    \  ORDER BY IFNULL(r.time, p.time) DESC"
+  pure $ fmap groupLast results
+  where groupLast (opId, opTxt, opTime, lastId, lastTxt, lastTime) =
+          (opId, opTxt, opTime, (,,) <$> lastId <*> lastTxt <*> lastTime)
+
 
 getThread :: ThreadId -> App (Maybe (Text, UTCTime))
 getThread threadId = do
@@ -127,14 +138,14 @@ homepageHandler = do
     , LText ""
     ] <> intercalate [LText ""] (renderThread <$> threads)
 
-renderThread :: (ThreadId, T.Text, UTCTime) -> GeminiDocument
-renderThread (i, txt, t) =
-  [ LH3 $ "#" <> LT.pack (show i) <>
-          " - Anonymous - " <> --TODO use client cert for "tripcode"
-          LT.pack (show t)
-  , LText $ LT.fromStrict txt
-  , LLink (LT.pack $ "/thread/" <> show i) $ Just "Go to thread"
-  ]
+renderThread :: ( ThreadId, T.Text, UTCTime
+                , Maybe (Int, T.Text, UTCTime) ) -> GeminiDocument
+renderThread (i, txt, t, lastReply) =
+  renderOp (i, txt, t) <>
+  [LText "----------"] <>
+  maybe [LText "No replies yet"] renderReply' lastReply <>
+  [LLink (LT.pack $ "/thread/" <> show i) $ Just "Go to thread"]
+  where renderReply' x = LText "Last Reply:" : renderReply x
 
 threadHandler :: String -> App Response
 threadHandler threadId' = do
