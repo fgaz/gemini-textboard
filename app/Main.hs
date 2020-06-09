@@ -145,10 +145,9 @@ renderThread :: ( ThreadId, T.Text, UTCTime
                 , Maybe (Int, T.Text, UTCTime) ) -> GeminiDocument
 renderThread (i, txt, t, lastReply) =
   renderOp (i, txt, t) <>
-  [LText "----------"] <>
-  maybe [LText "No replies yet"] renderReply' lastReply <>
+  [LText "⋮"] <>
+  maybe [LText "No replies yet"] renderReply lastReply <>
   [LLink (LT.pack $ "/thread/" <> show i) $ Just "Go to thread"]
-  where renderReply' x = LText "Last Reply:" : renderReply x
 
 threadHandler :: String -> App Response
 threadHandler threadId' = do
