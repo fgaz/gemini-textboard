@@ -3,4 +3,5 @@ dist-newstyle
 *.o
 *.hi
 .ghc.environment.*
+gemini-textboard.db
 
