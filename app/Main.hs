@@ -9,6 +9,8 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Class
 
+import Control.Concurrent (forkIO, threadDelay)
+
 import Network.URI (parseRelativeReference)
 
 import Data.Functor (($>))
@@ -44,7 +46,12 @@ main = do
   conn <- SQL.open "gemini-textboard.db"
   createTables conn
   nonceGen <- Nonce.new
-  nonceCache <- Cache.newCache $ Just $ TimeSpec 300 0 -- TODO clean periodically
+  nonceCache <- Cache.newCache $ Just $ TimeSpec 300 0
+  let cleanNonceCache = do
+        threadDelay 300000000
+        Cache.purgeExpired nonceCache
+        cleanNonceCache
+  _ <- forkIO cleanNonceCache
   let ctx = Context conn nonceGen nonceCache
   runServer Nothing "1964" $ runRouteT' (`runReaderT` ctx) app
 
