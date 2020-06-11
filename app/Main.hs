@@ -27,6 +27,7 @@ import qualified Database.SQLite.Simple as SQL
 import qualified Data.Cache as Cache
 import System.Clock (TimeSpec(TimeSpec))
 import Data.Time.Clock (UTCTime, getCurrentTime)
+import Data.Time.Format (formatTime, defaultTimeLocale, rfc822DateFormat)
 import qualified Crypto.Nonce as Nonce
 
 
@@ -173,7 +174,7 @@ renderOp :: (ThreadId, T.Text, UTCTime) -> GeminiDocument
 renderOp (i, txt, t) =
   [ LH2 $ "#" <> LT.pack (show i) <>
           " - Anonymous - " <> --TODO use client cert for "tripcode"
-          LT.pack (show t)
+          LT.pack (formatTime defaultTimeLocale rfc822DateFormat t)
   , LText $ LT.fromStrict txt
   ]
 
@@ -181,7 +182,7 @@ renderReply :: (Int, T.Text, UTCTime) -> GeminiDocument
 renderReply (i, txt, t) =
   [ LH3 $ "#" <> LT.pack (show i) <>
           " - Anonymous - " <> --TODO use client cert for "tripcode"
-          LT.pack (show t)
+          LT.pack (formatTime defaultTimeLocale rfc822DateFormat t)
   , LText $ LT.fromStrict txt
   ]
 
