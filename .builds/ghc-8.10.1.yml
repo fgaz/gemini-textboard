@@ -17,5 +17,6 @@ tasks:
     cd gemini-textboard
     cabal update
     cabal build
+    cabal haddock
     cabal test
 
