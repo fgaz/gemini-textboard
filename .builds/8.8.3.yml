@@ -1,0 +1,21 @@
+
+
+
+image: debian/buster
+packages:
+- ghc-8.8.3
+- cabal-install-3.2
+repositories:
+  ghc: http://downloads.haskell.org/debian buster main BA3CBA3FFE22B574
+sources:
+- https://git.sr.ht/~fgaz/gemini-textboard
+tasks:
+- build: |
+    export PATH=/opt/ghc/bin:$PATH
+    ghc --version
+    cabal --version
+    cd gemini-textboard
+    cabal update
+    cabal build
+    cabal test
+
