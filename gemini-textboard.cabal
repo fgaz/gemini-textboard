@@ -12,7 +12,7 @@ author:              Francesco Gazzetta
 maintainer:          Francesco Gazzetta <fgaz@fgaz.me>
 copyright:           © 2020 Francesco Gazzetta and contributors
 category:            Gemini
-extra-source-files:  CHANGELOG.md
+extra-source-files:  CHANGELOG.md, README.md
 
 source-repository head
   type:                git
