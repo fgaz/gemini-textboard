@@ -8,3 +8,5 @@
 This package serves also as an example for the other haskell-gemini libraries.
 More info at https://sr.ht/~fgaz/haskell-gemini/
 
+**I have an instance online at [gemini-textboard.fgaz.me](gemini://gemini-textboard.fgaz.me)**
+
