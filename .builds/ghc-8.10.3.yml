@@ -3,8 +3,9 @@
 
 image: debian/buster
 packages:
-- ghc-8.10.1
-- cabal-install-3.2
+- ghc-8.10.3
+- cabal-install-3.4
+- libssl-dev
 repositories:
   ghc: http://downloads.haskell.org/debian buster main BA3CBA3FFE22B574
 sources:
@@ -17,6 +18,5 @@ tasks:
     cd gemini-textboard
     cabal update
     cabal build
-    cabal haddock
     cabal test
 
