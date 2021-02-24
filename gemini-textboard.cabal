@@ -1,7 +1,7 @@
 cabal-version:       2.2
 
 name:                gemini-textboard
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            A barebones textboard for the Gemini protocol
 -- description:
 homepage:            https://sr.ht/~fgaz/haskell-gemini/
