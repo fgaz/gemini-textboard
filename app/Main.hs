@@ -166,6 +166,7 @@ app = asum
   , dir "thread" $ capture $ \threadId -> end $ threadHandler threadId
   , dir "thread" $ capture $ \threadId -> dir "post" $ end $ threadPostRedirectHandler threadId
   , dir "p" $ capture $ \nonce -> input "Write your post" $ \post -> end $ postHandler nonce post
+  , dir "robots.txt" $ end robotsTxt
   ]
 
 homepageHandler :: App Response
@@ -234,6 +235,13 @@ postHandler nonce content = do
     New -> insertThread content
     Reply threadId -> insertReply threadId content $> threadId
   pure $ redirect $ fromJust $ parseRelativeReference $ "/thread/" <> show threadId
+
+robotsTxt :: App Response
+robotsTxt = pure $ okGemini $ encodeUtf8
+  "User-agent: *\n\
+  \# Do not crawl submission pages\n\
+  \Disallow: /post/\n\
+  \Disallow: /p/"
 
 -- Utils
 --------
