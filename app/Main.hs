@@ -67,7 +67,7 @@ main = do
         cleanNonceCache
   _ <- forkIO cleanNonceCache
   let ctx = Context conn nonceGen nonceCache
-  runServer Nothing "1965" "cert.pem" $ runRouteT' (`runReaderT` ctx) app
+  runServer Nothing "1965" "cert.pem" "cert.pem" $ runRouteT' (`runReaderT` ctx) app
 
 -- DB stuff
 -----------

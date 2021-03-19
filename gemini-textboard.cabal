@@ -22,7 +22,7 @@ executable gemini-textboard
   main-is:             Main.hs
   other-extensions:    OverloadedStrings
   build-depends:       base ^>=4.12.0.0 || ^>=4.13.0.0 || ^>=4.14.0.0
-                     , gemini-server ^>=0.2.0.0
+                     , gemini-server ^>=0.3.0.0
                      , gemini-router ^>=0.1.1.0
                      , language-gemini ^>=0.1.0.0
                      , nonce ^>=1.0.7
