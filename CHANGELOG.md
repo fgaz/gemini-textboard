@@ -1,5 +1,9 @@
 # Revision history for gemini-textboard
 
+## 0.2.0.1 -- 2021-03-19
+
+* Update gemini-server dependency (TLS resumption fix)
+
 ## 0.2.0.0 -- 2021-02-22
 
 * SSL/TLS
