@@ -237,7 +237,7 @@ postHandler nonce content = do
   pure $ redirect $ fromJust $ parseRelativeReference $ "/thread/" <> show threadId
 
 robotsTxt :: App Response
-robotsTxt = pure $ okGemini $ encodeUtf8
+robotsTxt = pure $ okPlain $ encodeUtf8
   "User-agent: *\n\
   \# Do not crawl submission pages\n\
   \Disallow: /post/\n\
