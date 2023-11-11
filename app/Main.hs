@@ -56,8 +56,7 @@ instance SQL.FromRow Post where
 type App = RouteT (ReaderT Context IO)
 
 main :: IO ()
-main = do
-  conn <- SQL.open "gemini-textboard.db"
+main = SQL.withConnection "gemini-textboard.db" $ \conn -> do
   createTables conn
   nonceGen <- Nonce.new
   nonceCache <- Cache.newCache $ Just $ TimeSpec 300 0
@@ -115,10 +114,11 @@ insertThread content = do
   conn <- db <$> lift ask
   now <- liftIO getCurrentTime
   author <- getAuthor
-  liftIO $ SQL.execute conn
-    "INSERT INTO posts (parent, content, author, time) VALUES (NULL,?,?,?)"
-    (content, author, now)
-  fmap fromIntegral $ liftIO $ SQL.lastInsertRowId conn --TODO non thread safe?
+  liftIO $ SQL.withTransaction conn $ do
+    SQL.execute conn
+      "INSERT INTO posts (parent, content, author, time) VALUES (NULL,?,?,?)"
+      (content, author, now)
+    fromIntegral <$> SQL.lastInsertRowId conn
 
 insertReply :: PostId -> String -> App ()
 insertReply threadId content = do
