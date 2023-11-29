@@ -74,10 +74,10 @@ main = SQL.withConnection "gemini-textboard.db" $ \conn -> do
 createTables :: SQL.Connection -> IO ()
 createTables conn = do
   SQL.execute_ conn $ "CREATE TABLE IF NOT EXISTS posts " <>
-    "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " <>
+    -- NOTE: AUTOINCREMENT here is important: it prevents the reuse of deleted ids
+    "(id INTEGER PRIMARY KEY AUTOINCREMENT, " <>
     "parent INTEGER, content TEXT NOT NULL, author TEXT, time TEXT NOT NULL, " <>
-    "FOREIGN KEY(parent) REFERENCES posts(id))"
-  SQL.execute_ conn "CREATE UNIQUE INDEX IF NOT EXISTS post_id_index ON posts (id)"
+    "FOREIGN KEY(parent) REFERENCES posts(id) ON DELETE CASCADE)"
   SQL.execute_ conn "CREATE INDEX IF NOT EXISTS post_parent_index ON posts (parent)"
   SQL.execute_ conn "CREATE INDEX IF NOT EXISTS post_time_index ON posts (time)"
 
